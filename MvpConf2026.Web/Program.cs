@@ -9,16 +9,16 @@ if (!string.IsNullOrWhiteSpace(appConfigEndpoint))
 {
     builder.Configuration.AddAzureAppConfiguration(options =>
     {
-        options.Connect(new Uri(appConfigEndpoint), new DefaultAzureCredential());
+        options.Connect(new Uri(appConfigEndpoint), new DefaultAzureCredential())
+            .Select("MVPConf:*")
+            .ConfigureRefresh(refreshOptions => refreshOptions
+                .RegisterAll()
+                .SetRefreshInterval(TimeSpan.FromSeconds(60))
+            );
+            // Descomentar para habilitar o refresh automático das configurações do Azure App Configuration
+            
             // Descomentar para habilitar a gestão de feature flags
             //.UseFeatureFlags();
-            
-            // Descomentar para habilitar o refresh automático das configurações do Azure App Configuration
-            // // .Select("MVPConf:*")
-            // // .ConfigureRefresh(refreshOptions => refreshOptions
-            // //     .RegisterAll()
-            // //     .SetRefreshInterval(TimeSpan.FromSeconds(60))
-            // // );
     });
 }
 
@@ -30,10 +30,10 @@ builder.Services.AddControllersWithViews();
 
 // Descomentar para habilitar o refresh automático das configurações do Azure App Configuration
 // // // Required to resolve IConfigurationRefresherProvider used by the refresh middleware below.
-// // if (!string.IsNullOrWhiteSpace(appConfigEndpoint))
-// // {
-// //     builder.Services.AddAzureAppConfiguration();
-// // }
+if (!string.IsNullOrWhiteSpace(appConfigEndpoint))
+{
+    builder.Services.AddAzureAppConfiguration();
+}
 
 var app = builder.Build();
 
@@ -44,10 +44,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 // Descomentar para habilitar o refresh automático das configurações do Azure App Configuration
-// // if (!string.IsNullOrWhiteSpace(appConfigEndpoint))
-// // {
-// //     app.UseAzureAppConfiguration();
-// // }
+if (!string.IsNullOrWhiteSpace(appConfigEndpoint))
+{
+    app.UseAzureAppConfiguration();
+}
 
 app.UseHttpsRedirection();
 app.UseRouting();
