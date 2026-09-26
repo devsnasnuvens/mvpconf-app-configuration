@@ -14,7 +14,8 @@ if (!string.IsNullOrWhiteSpace(appConfigEndpoint))
             .ConfigureRefresh(refreshOptions => refreshOptions
                 .RegisterAll()
                 .SetRefreshInterval(TimeSpan.FromSeconds(60))
-            );
+            )
+            .UseFeatureFlags();
             // Descomentar para habilitar o refresh automático das configurações do Azure App Configuration
             
             // Descomentar para habilitar a gestão de feature flags
@@ -25,7 +26,7 @@ if (!string.IsNullOrWhiteSpace(appConfigEndpoint))
 builder.Services.AddControllersWithViews();
 
 // Descomentar para habilitar a gestão de feature flags
-// builder.Services.AddFeatureManagement();
+builder.Services.AddFeatureManagement();
 
 
 // Descomentar para habilitar o refresh automático das configurações do Azure App Configuration

@@ -8,22 +8,22 @@ namespace MvpConf2026.Web.Controllers;
 public class HomeController : Controller
 {
     private readonly IConfiguration _configuration;
-    // private readonly IFeatureManager _featureManager;
+    private readonly IFeatureManager _featureManager;
 
-    public HomeController(IConfiguration configuration) //, IFeatureManager featureManager)
+    public HomeController(IConfiguration configuration, IFeatureManager featureManager)
     {
         _configuration = configuration;
-        // _featureManager = featureManager;
+        _featureManager = featureManager;
     }
 
     public async Task<IActionResult> Index()
     {
         ViewData["Mensagem"] = _configuration["MVPConf:Mensagem"];
 
-        // if (await _featureManager.IsEnabledAsync("SuperFeature"))
-        // {
-        //     ViewData["SuperFeatureMensagem"] = "A nova super feature foi habilitada!";
-        // }
+        if (await _featureManager.IsEnabledAsync("SuperFeature"))
+        {
+            ViewData["SuperFeatureMensagem"] = "A nova super feature foi habilitada!";
+        }
 
         return View();
     }
